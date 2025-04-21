@@ -12,7 +12,7 @@ let currentVideoTitle = '';
 let episodesReversed = false;
 // --- 获取 DOM 元素的引用 (优化性能，避免重复查找) ---
 let searchInput, resultsDiv, searchArea, resultsArea, doubanControls, doubanResults, backToHomeContainer;
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     searchInput = document.getElementById('searchInput');
     resultsDiv = document.getElementById('results');
     searchArea = document.getElementById('searchArea');
@@ -22,8 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     backToHomeContainer = document.getElementById('backToHomeContainer');
 });
 
-// 页面初始化
-document.addEventListener('DOMContentLoaded', function() {
     // 初始化API复选框
     initAPICheckboxes();
     
@@ -48,6 +46,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 标记已初始化默认值
         localStorage.setItem('hasInitializedDefaults', 'true');
+
+        // 重新应用一下默认值，因为可能在其他函数前执行
+        const yellowToggle = document.getElementById('yellowFilterToggle');
+        if(yellowToggle) yellowToggle.checked = true;
+        const adToggle = document.getElementById('adFilterToggle');
+        if(adToggle) adToggle.checked = true;
     }
     
     // 设置黄色内容过滤开关初始状态
@@ -67,11 +71,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 初始检查成人API选中状态
     setTimeout(checkAdultAPIsSelected, 100);
+
+    // 显式调用 resetSearchArea 设置初始界面状态
+    console.log("Setting initial UI state with resetSearchArea"); // 调试日志
+    resetSearchArea();
 });
 
 // 初始化API复选框
 function initAPICheckboxes() {
     const container = document.getElementById('apiCheckboxes');
+    if (!container) { console.error("Element #apiCheckboxes not found!"); return; } // 添加检查
     container.innerHTML = '';
 
     // 添加普通API组标题
@@ -149,6 +158,13 @@ function initAPICheckboxes() {
 
 // 检查是否有成人API被选中
 function checkAdultAPIsSelected() {
+    const yellowFilterToggle = document.getElementById('yellowFilterToggle');
+    // 添加检查，确保元素存在
+    if (!yellowFilterToggle) return;
+    const yellowFilterContainer = yellowFilterToggle.closest('div.flex.items-center.justify-between')?.parentNode; // 更精确的选择器或直接给父元素加ID
+    const filterDescription = yellowFilterContainer?.querySelector('p.filter-description');
+    if (!yellowFilterContainer) return; // 如果找不到容器，也退出
+    
     // 查找所有内置成人API复选框
     const adultBuiltinCheckboxes = document.querySelectorAll('#apiCheckboxes .api-adult:checked');
     
@@ -515,19 +531,25 @@ function removeCustomApi(index) {
 // 设置事件监听器
 function setupEventListeners() {
     // 回车搜索
-    document.getElementById('searchInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            search();
-        }
-    });
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') search(); });
+    } else {
+        console.error("Element #searchInput not found during setupEventListeners!");
+    }
 
     // 点击外部关闭设置面板
     document.addEventListener('click', function(e) {
         const panel = document.getElementById('settingsPanel');
         const settingsButton = document.querySelector('button[onclick="toggleSettings(event)"]');
-        if (!panel.contains(e.target) && !settingsButton.contains(e.target) && panel.classList.contains('show')) {
+        if (panel && settingsButton && !panel.contains(e.target) && !settingsButton.contains(e.target) && panel.classList.contains('show')) {
             panel.classList.remove('show');
         }
+        const historyPanel = document.getElementById('historyPanel');
+        const historyButton = document.querySelector('button[onclick="toggleHistory(event)"]');
+        // **添加检查 historyPanel 是否存在**
+         if (historyPanel && historyButton && !historyPanel.contains(e.target) && !historyButton.contains(e.target) && historyPanel.classList.contains('show')) {
+            historyPanel.classList.remove('show');
+         }
     });
     
     // 黄色内容过滤开关事件绑定
@@ -549,8 +571,10 @@ function setupEventListeners() {
 
 // 重置搜索区域 - 修改以显示推荐
 function resetSearchArea() {
-    if (resultsDiv) resultsDiv.innerHTML = ''; // 清空搜索结果
-    if (searchInput) searchInput.value = '';   // 清空搜索框
+    console.log("Resetting search area: Showing recommendations, hiding results."); // 调试日志
+    // **使用已获取的 DOM 引用，并添加存在性检查**
+    if (resultsDiv) resultsDiv.innerHTML = '';
+    if (searchInput) searchInput.value = '';
 
     // 恢复搜索区域默认样式
     if (searchArea) searchArea.classList.remove('mb-8'); // 移除搜索结果时的下边距
@@ -1014,9 +1038,13 @@ function toggleEpisodeOrder() {
 
 // ** 新增：返回首页推荐的函数 **
 function goBackToHome() {
+    console.log("Going back to home recommendations."); // 调试日志
     resetSearchArea();
-    // 可选：如果希望每次返回都刷新推荐内容，可以取消下面一行的注释
-    // fetchDoubanTV(currentDoubanTag || "%E7%83%AD%E9%97%A8", 0);
+
+    // 强制重新获取当前分类的第一页数据，确保内容刷新
+    const activeTab = document.querySelector('.douban-tab.active');
+    const currentTag = activeTab ? activeTab.dataset.tag : '%E7%83%AD%E9%97%A8'; // 回退到热门
+    fetchDoubanTV(currentTag, 0); // 从第一页开始加载
 }
 
 // app.js 或路由文件中
