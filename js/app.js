@@ -75,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 显式调用 resetSearchArea 设置初始界面状态
     console.log("Setting initial UI state with resetSearchArea"); // 调试日志
     resetSearchArea();
-});
 
 // 初始化API复选框
 function initAPICheckboxes() {
