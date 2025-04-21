@@ -525,16 +525,9 @@ function setupEventListeners() {
     document.addEventListener('click', function(e) {
         const panel = document.getElementById('settingsPanel');
         const settingsButton = document.querySelector('button[onclick="toggleSettings(event)"]');
-        
         if (!panel.contains(e.target) && !settingsButton.contains(e.target) && panel.classList.contains('show')) {
             panel.classList.remove('show');
         }
-        // 点击外部关闭历史记录面板
-        const historyPanel = document.getElementById('historyPanel');
-        const historyButton = document.querySelector('button[onclick="toggleHistory(event)"]');
-         if (!historyPanel.contains(e.target) && !historyButton.contains(e.target) && historyPanel.classList.contains('show')) {
-            historyPanel.classList.remove('show');
-         }
     });
     
     // 黄色内容过滤开关事件绑定
@@ -560,10 +553,7 @@ function resetSearchArea() {
     if (searchInput) searchInput.value = '';   // 清空搜索框
 
     // 恢复搜索区域默认样式
-    if (searchArea) {
-        searchArea.classList.add('flex-1'); // 可能不需要，因为现在推荐内容会填充
-        searchArea.classList.remove('mb-8'); // 移除搜索结果时的下边距
-    }
+    if (searchArea) searchArea.classList.remove('mb-8'); // 移除搜索结果时的下边距
     // 隐藏搜索结果区域
     if (resultsArea) resultsArea.classList.add('hidden');
 
