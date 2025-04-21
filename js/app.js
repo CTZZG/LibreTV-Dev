@@ -1031,15 +1031,17 @@ function toggleEpisodeOrder() {
     }
 }
 
-// ** 新增：返回首页推荐的函数 **
+// 返回首页推荐的函数
 function goBackToHome() {
-    console.log("Going back to home recommendations."); // 调试日志
+    console.log("Going back to home recommendations.");
     resetSearchArea();
-
-    // 强制重新获取当前分类的第一页数据，确保内容刷新
-    const activeTab = document.querySelector('.douban-tab.active');
-    const currentTag = activeTab ? activeTab.dataset.tag : '%E7%83%AD%E9%97%A8'; // 回退到热门
-    fetchDoubanTV(currentTag, 0); // 从第一页开始加载
+    if (typeof fetchDoubanTV === 'function') {
+        const activeTab = document.querySelector('.douban-tab.active');
+        const currentTag = activeTab ? activeTab.dataset.tag : '%E7%83%AD%E9%97%A8';
+        fetchDoubanTV(currentTag, 0);
+    } else {
+        console.error("fetchDoubanTV function not found!");
+    }
 }
 
 // app.js 或路由文件中
