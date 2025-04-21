@@ -395,26 +395,28 @@
 
           item.innerHTML = `
             <!-- 点击图片触发搜索 -->
-            <button 
+            <button
               class="relative w-full flex justify-center group active:scale-95 transition transform duration-150 ease-in-out"
               onclick="fillAndSearch('${tv.title}')"
             >
-            <div class="relative w-full aspect-[2/3] overflow-hidden rounded-md">
-              <img 
-                src="${tv.cover}" 
-                alt="${tv.title}" 
-                class="w-32 h-48 object-cover rounded-md group-hover:opacity-90 transition duration-300 ease-in-out"
+            <!-- 修改：移除 aspect-[2/3]，添加固定高度 h-40 (与搜索结果一致) 或 h-48/h-52 (如果想要海报更高一点) -->
+            <div class="relative w-full h-48 overflow-hidden rounded-md">  
+              <img
+                src="${tv.cover}"
+                alt="${tv.title}"
+                /* 修改：移除 w-32 h-48，添加 w-full h-full 使图片填充容器 */
+                class="w-full h-full object-cover rounded-md group-hover:opacity-90 transition duration-300 ease-in-out" 
               />
               <div class="absolute bottom-2 left-2 bg-black/70 text-white text-xs font-semibold px-2 py-1 rounded">
                 评分: ${tv.rate || "暂无"}
               </div>
-		</div>
+            </div>
             </button>
 
             <!-- 标题跳转链接 -->
-            <a 
-              href="${tv.url}" 
-              target="_blank" 
+            <a
+              href="${tv.url}"
+              target="_blank"
               class="mt-2 w-full block text-sm font-semibold truncate hover:text-blue-400"
             >
               ${tv.title}
