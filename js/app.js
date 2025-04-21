@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("Setting initial UI state with resetSearchArea"); // 调试日志
     resetSearchArea();
 });
-    
+
 // 初始化API复选框
 function initAPICheckboxes() {
     const container = document.getElementById('apiCheckboxes');
