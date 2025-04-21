@@ -567,7 +567,7 @@ function setupEventListeners() {
 // 重置搜索区域 - 修改以显示推荐
 function resetSearchArea() {
     console.log("Resetting search area: Showing recommendations, hiding results."); // 调试日志
-    // **使用已获取的 DOM 引用，并添加存在性检查**
+    // 使用已获取的 DOM 引用，并添加存在性检查
     if (resultsDiv) resultsDiv.innerHTML = '';
     if (searchInput) searchInput.value = '';
 
@@ -576,11 +576,11 @@ function resetSearchArea() {
     // 隐藏搜索结果区域
     if (resultsArea) resultsArea.classList.add('hidden');
 
-    // ** 新增：显示豆瓣推荐区域和控件 **
+    // 显示豆瓣推荐区域和控件
     if (doubanControls) doubanControls.classList.remove('hidden');
     if (doubanResults) doubanResults.classList.remove('hidden');
 
-    // ** 新增：隐藏返回首页按钮 **
+    // 隐藏返回首页按钮
     if (backToHomeContainer) backToHomeContainer.classList.add('hidden');
     
     // 确保页脚正确显示，移除相对定位
@@ -1031,17 +1031,15 @@ function toggleEpisodeOrder() {
     }
 }
 
-// 返回首页推荐的函数
+// ** 新增：返回首页推荐的函数 **
 function goBackToHome() {
-    console.log("Going back to home recommendations.");
+    console.log("Going back to home recommendations."); // 调试日志
     resetSearchArea();
-    if (typeof fetchDoubanTV === 'function') {
-        const activeTab = document.querySelector('.douban-tab.active');
-        const currentTag = activeTab ? activeTab.dataset.tag : '%E7%83%AD%E9%97%A8';
-        fetchDoubanTV(currentTag, 0);
-    } else {
-        console.error("fetchDoubanTV function not found!");
-    }
+
+    // 强制重新获取当前分类的第一页数据，确保内容刷新
+    const activeTab = document.querySelector('.douban-tab.active');
+    const currentTag = activeTab ? activeTab.dataset.tag : '%E7%83%AD%E9%97%A8'; // 回退到热门
+    fetchDoubanTV(currentTag, 0); // 从第一页开始加载
 }
 
 // app.js 或路由文件中
