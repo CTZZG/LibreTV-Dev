@@ -173,10 +173,6 @@ function checkAdultAPIsSelected() {
     
     const hasAdultSelected = adultBuiltinCheckboxes.length > 0 || customApiCheckboxes.length > 0;
     
-    const yellowFilterToggle = document.getElementById('yellowFilterToggle');
-    const yellowFilterContainer = yellowFilterToggle.closest('div').parentNode;
-    const filterDescription = yellowFilterContainer.querySelector('p.filter-description');
-    
     // 如果选择了成人API，禁用黄色内容过滤器
     if (hasAdultSelected) {
         yellowFilterToggle.checked = false;
