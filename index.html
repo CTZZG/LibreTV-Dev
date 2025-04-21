@@ -400,13 +400,12 @@
               onclick="fillAndSearch('${tv.title}')"
             >
             <!-- 修改：移除 h-xx，添加 aspect-[2/3] -->
-            <div class="relative w-full aspect-[2/3] overflow-hidden rounded-md bg-black/20"> <!-- 添加背景色以防透明图 -->
-              <img
-                src="${tv.cover}"
-                alt="${tv.title}"
-                /* 修改：确保有 w-full h-full，并将 object-cover 改为 object-contain */
-                class="w-full h-full object-contain rounded-md group-hover:opacity-90 transition duration-300 ease-in-out"
-              />
+            <div class="relative w-full aspect-[2/3] overflow-hidden rounded-md"> 
+            <img
+              src="${tv.cover}"
+              alt="${tv.title}"
+              class="w-full h-full object-contain rounded-md group-hover:opacity-90 transition duration-300 ease-in-out" 
+            />
               <div class="absolute bottom-2 left-2 bg-black/70 text-white text-xs font-semibold px-2 py-1 rounded">
                 评分: ${tv.rate || "暂无"}
               </div>
